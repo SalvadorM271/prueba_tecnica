@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            yamlFile 'agent.yml'
+            defaultContainer 'jnlp'
         }
     }
     stages {
@@ -39,19 +39,19 @@ pipeline {
                 APP = "438555236323.dkr.ecr.us-east-1.amazonaws.com/prueba_tecnica"
             }
             steps {
-                container('docker') {
-                        script {
-                            sh """
-                            echo \"Build started on `date`\"
-                            echo Building the Docker image...
-                            docker build --tag $APP:$TAG .
-                            echo \"Build completed on `date`\"
-                            echo Pushing the Docker image to ECR Repository
-                            docker push $APP:$TAG
-                            echo \"Docker Image Push to ECR Completed -  $APP:$TAG\"
-                            """
-                        }
+                
+                script {
+                    sh """
+                    echo \"Build started on `date`\"
+                    echo Building the Docker image...
+                    docker build --tag $APP:$TAG .
+                    echo \"Build completed on `date`\"
+                    echo Pushing the Docker image to ECR Repository
+                    docker push $APP:$TAG
+                    echo \"Docker Image Push to ECR Completed -  $APP:$TAG\"
+                    """
                 }
+                
             }
         }
         
