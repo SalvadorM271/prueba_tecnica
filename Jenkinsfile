@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Install dependencies') {
         steps {
-            sh 'apt-get update && apt-get install -y git aws-cli'
+            sh 'apk add --no-cache aws-cli'
             sh 'aws --version'
         }
         }
