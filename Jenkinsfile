@@ -3,6 +3,7 @@ pipeline {
         kubernetes {
             yamlFile 'agent.yml'
         }
+    }
     stages {
         stage('Checkout') {
         steps {
