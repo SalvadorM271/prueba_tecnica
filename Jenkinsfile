@@ -14,8 +14,9 @@ pipeline {
                         env.APP = "438555236323.dkr.ecr.us-east-1.amazonaws.com/prueba_tecnica"
                         env.ACC = "438555236323"
                         env.REGION = "us-east-1"
+                        withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         sh "aws ecr get-login-password --region \${REGION} | docker login --username AWS -p --password-stdin \${ACC}.dkr.ecr.\${REGION}.amazonaws.com > /dev/null" 
-                        
+                        }
                     }
                 }
             }
