@@ -26,6 +26,17 @@ pipeline {
             }
         }
 
+        stage('Build-Docker-Image') {
+            steps {
+                container('docker') {
+                    script {
+                        sh "echo building image..."
+                        sh "docker build --tag \${APP}:\${TAG} ."
+                    }
+                }
+            }
+        }
+
         stage('Log_in_to_ecr') {
             steps {
                 container('docker') {
@@ -41,23 +52,8 @@ pipeline {
                 }
             }
         }
-        stage('Build-Docker-Image') {
-            steps {
-                container('docker') {
-                    script {
-                        sh "echo building image..."
-                        sh "docker build --tag \${APP}:\${TAG} ."
-                    }
-                }
-            }
-        }
-        stage('test-scope') {
-            steps {
-                container('docker') {
-                sh 'echo $TAG'
-                }
-            }
-        }
+        
+
      
     }
 }
