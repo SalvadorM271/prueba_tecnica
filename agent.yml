@@ -8,7 +8,7 @@ spec:
         - cat
       tty: true
     - name: docker
-      image: crimson2022/custom_agent
+      image: crimson2022/custom_agent:2
       command:
         - cat
       tty: true
