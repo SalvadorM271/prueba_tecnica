@@ -18,6 +18,7 @@ pipeline {
                     script {
                         env.SONAR_URL = "https://sonar.mycloudprojects.uk"
                         withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_AUTH_TOKEN')]) {
+                        sh 'mvn clean install'
                         sh 'mvn sonar:sonar -Dsonar.login=\$SONAR_AUTH_TOKEN -Dsonar.host.url=\${SONAR_URL}'
                         }
                     }
