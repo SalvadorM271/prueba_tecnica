@@ -11,13 +11,6 @@ pipeline {
             sh 'echo passed'
         }
         }
-        stage('Install dependencies') {
-        steps {
-            sh 'sudo apt-get update'
-            sh 'sudo apt-get install -y aws-cli'
-            sh 'aws --version'
-        }
-        }
         stage('pre-run set up') {
         environment {
                 AWS_REGION = "us-east-1"
@@ -28,7 +21,7 @@ pipeline {
                 env.TAG = sh(script: 'echo "$(date +%Y-%m-%d.%H.%M.%S)-${BUILD_ID}"', returnStdout: true).trim()
                 // Log in to ECR and authenticate Docker client
                 withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                def ecrLogin = sh(script: "aws ecr get-login --no-include-email --region ${AWS_REGION} --registry-ids ${ECR_REGISTRY_ID}", returnStdout: true).trim()
+                def ecrLogin = sh(script: "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com", returnStdout: true).trim()
                 //  prevent the Docker login command and authentication token from being displayed in the Jenkins log output
                 sh "${ecrLogin} > /dev/null"
                 }
