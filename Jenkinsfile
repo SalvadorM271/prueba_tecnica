@@ -1,9 +1,8 @@
 pipeline {
     agent {
-        docker { // this agent creates a container per job (job = run, not stage)
-            image 'alpine:3.17.3'
-            args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
-        }
+         kubernetes {
+            defaultContainer 'jnlp'
+         }
     }
     stages {
         stage('Checkout') {
@@ -14,7 +13,8 @@ pipeline {
         }
         stage('Install dependencies') {
         steps {
-            sh 'apk add --no-cache aws-cli'
+            sh 'apt-get update'
+            sh 'apt-get install -y aws-cli'
             sh 'aws --version'
         }
         }
