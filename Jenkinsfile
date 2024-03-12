@@ -5,6 +5,12 @@ pipeline {
         }
     }
     stages {
+        stage('Checkout') {
+            steps {
+                sh 'echo passed'
+                // the repo gets checkout when jenkinsfile is fetched
+            }
+        }
 
         stage('Static Code Analysis') {
             steps {
