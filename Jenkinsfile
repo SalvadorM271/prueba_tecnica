@@ -30,6 +30,8 @@ pipeline {
             steps {
                 container('docker') {
                     script {
+                        env.TAG = sh(script: 'echo "$(date +%Y-%m-%d.%H.%M.%S)-${BUILD_ID}"', returnStdout: true).trim()
+                        env.APP = "438555236323.dkr.ecr.us-east-1.amazonaws.com/prueba_tecnica"
                         sh "echo building image..."
                         sh "docker build --tag \${APP}:\${TAG} ."
                     }
@@ -41,8 +43,6 @@ pipeline {
             steps {
                 container('docker') {
                     script {
-                        env.TAG = sh(script: 'echo "$(date +%Y-%m-%d.%H.%M.%S)-${BUILD_ID}"', returnStdout: true).trim()
-                        env.APP = "438555236323.dkr.ecr.us-east-1.amazonaws.com/prueba_tecnica"
                         env.ACC = "438555236323"
                         env.REGION = "us-east-1"
                         withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
