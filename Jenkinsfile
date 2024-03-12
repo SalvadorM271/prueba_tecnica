@@ -1,22 +1,12 @@
 pipeline {
   agent {
-    docker { // this agent creates a container per job (job = run, not stage)
-      image 'alpine:3.17.3'
-      args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
-    }
+    any
   }
   stages {
     stage('Checkout') {
       steps {
         // since i have configure branch discovery this is not needed
         sh 'echo passed'
-      }
-    }
-    stage('Install dependencies') {
-      steps {
-        sh 'apk add --no-cache docker-cli' // not docker but the cli (im using the host pc docker)
-        sh 'apk add --no-cache aws-cli'
-        sh 'aws --version'
       }
     }
     stage('pre-run set up') {
@@ -29,7 +19,7 @@ pipeline {
             env.TAG = sh(script: 'echo "$(date +%Y-%m-%d.%H.%M.%S)-${BUILD_ID}"', returnStdout: true).trim()
             // Log in to ECR and authenticate Docker client
             withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-              def ecrLogin = sh(script: "aws ecr get-login --no-include-email --region ${AWS_REGION} --registry-ids ${ECR_REGISTRY_ID}", returnStdout: true).trim()
+              def ecrLogin = sh(script: "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com", returnStdout: true).trim()
               //  prevent the Docker login command and authentication token from being displayed in the Jenkins log output
               sh "${ecrLogin} > /dev/null"
             }
