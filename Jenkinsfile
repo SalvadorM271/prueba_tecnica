@@ -13,8 +13,8 @@ pipeline {
         }
         stage('Install dependencies') {
         steps {
-            sh 'apt-get update'
-            sh 'apt-get install -y aws-cli'
+            sh 'sudo apt-get update'
+            sh 'sudo apt-get install -y aws-cli'
             sh 'aws --version'
         }
         }
