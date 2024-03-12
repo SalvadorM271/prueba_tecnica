@@ -6,6 +6,19 @@ pipeline {
     }
     stages {
 
+        stage('Static Code Analysis') {
+            steps {
+                container('maven') {
+                    script {
+                        env.SONAR_URL = "https://sonar.mycloudprojects.uk"
+                        withCredentials([string(credentialsId: 'sonar', variable: 'SONAR_AUTH_TOKEN')]) {
+                        sh 'mvn sonar:sonar -Dsonar.login=\$SONAR_AUTH_TOKEN -Dsonar.host.url=\${SONAR_URL}'
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Log_in_to_ecr') {
             steps {
                 container('docker') {
