@@ -33,7 +33,7 @@ pipeline {
                         env.TAG = sh(script: 'echo "$(date +%Y-%m-%d.%H.%M.%S)-${BUILD_ID}"', returnStdout: true).trim()
                         env.APP = "438555236323.dkr.ecr.us-east-1.amazonaws.com/prueba_tecnica"
                         sh "echo building image..."
-                        sh "/kaniko/executor --dockerfile `pwd`/Dockerfile --context `pwd` --destination=$ECR_REPO:$env.BUILD_ID"
+                        sh "/kaniko/executor --dockerfile `pwd`/Dockerfile --context `pwd` --destination=$APP:$TAG"
                     }
                 }
             }
