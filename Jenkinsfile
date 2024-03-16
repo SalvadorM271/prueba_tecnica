@@ -26,7 +26,7 @@ pipeline {
             }
         }
 
-        stage('Build-Docker-Image') {
+        stage('Build and push image to ECR') {
             steps {
                 container('shell') {
                     script {
@@ -34,22 +34,6 @@ pipeline {
                         env.APP = "438555236323.dkr.ecr.us-east-1.amazonaws.com/prueba_tecnica"
                         sh "echo building image..."
                         sh "/kaniko/executor --dockerfile `pwd`/Dockerfile --context `pwd` --destination=$APP:$TAG"
-                    }
-                }
-            }
-        }
-
-        stage('Log_in_to_ecr') {
-            steps {
-                container('docker') {
-                    script {
-                        env.ACC = "438555236323"
-                        env.REGION = "us-east-1"
-                        withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                            def ecrLogin = sh(script: "aws ecr get-login --no-include-email --region ${REGION} --registry-ids ${ACC}", returnStdout: true).trim()
-                            // run script and redirect output to /dev/null
-                            sh "${ecrLogin} > /dev/null"
-                        }
                     }
                 }
             }
