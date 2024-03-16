@@ -24,7 +24,7 @@ spec:
       volumeMounts:
         - name: docker-config
           mountPath: /kaniko/.docker
-    volumes:
-      - name: docker-config
-        configMap:
-          name: docker-config # uses worker node permissions
+  volumes:
+    - name: docker-config
+      configMap:
+        name: docker-config # uses worker node permissions
